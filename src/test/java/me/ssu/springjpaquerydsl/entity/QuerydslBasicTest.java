@@ -1,9 +1,12 @@
 package me.ssu.springjpaquerydsl.entity;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static me.ssu.springjpaquerydsl.entity.QMember.member;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -122,5 +125,36 @@ public class QuerydslBasicTest extends BaseTest {
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
-}
 
+    // TODO 결과조회
+    @Test
+    void resultFetch() {
+        // TODO fetch, 리스트 조회 데이터 없으면 빈 리스트 반환
+        List<Member> fetch = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        // TODO fetchOne, 단 건 조회
+        Member fetchOne = queryFactory
+                .selectFrom(QMember.member)
+                .fetchOne();
+
+        // TODO
+        Member fetchFirst = queryFactory
+                .selectFrom(QMember.member)
+                // TODO fetchFirst == limit.fetchOne
+//                .limit(1).fetchOne();
+                .fetchFirst();
+
+        // TODO fetchResults, 페이징 정보 포함, total count 쿼리 추가 실행
+        QueryResults<Member> results = queryFactory
+                .selectFrom(member)
+                .fetchResults();
+
+        // TODO total Query
+        results.getTotal();
+
+        // TODO content Query
+        List<Member> content = results.getResults();
+    }
+}
