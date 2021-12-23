@@ -12,9 +12,12 @@ spring:
         # sout로 출력(가급적 로그 출력으로)
 #        show_sql: true
         format_sql: true
+        # 실행되는 JPQL을 보고 싶을 때
+        .use_sql_comments: true
 
 logging.level:
   # log로 출력
   org.hibernate.SQL: debug
-  # ? 보이게 하기
+  # ? 보이게 하기(1차)
   org.hibernate.type: trace
+
