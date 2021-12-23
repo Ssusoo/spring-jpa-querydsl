@@ -75,4 +75,52 @@ public class QuerydslBasicTest extends BaseTest {
         // TODO Then, Querydsl 검증
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
+
+    // TODO 검색 조건 쿼리(and)
+    @Test
+    void searchAnd() {
+        Member findMember = queryFactory
+                // TODO .select + .from == selectFrom
+                .selectFrom(QMember.member)
+                // TODO 이름이 멤버1이면서 나이가 10인 사람을 조회
+                .where(member.username.eq("member1")
+                        // TODO .and .or 가능
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    // TODO 검색 조건 쿼리(between)
+    @Test
+    void searchBetween() {
+        Member findMember = queryFactory
+                // TODO .select + .from == selectFrom
+                .selectFrom(QMember.member)
+                // TODO 이름이 멤버1이면서 나이가 10인 사람을 조회
+                .where(member.username.eq("member1")
+                        // TODO between
+                        .and(member.age.between(10, 30)))
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    // TODO 검색 조건 쿼리(andParam)
+    @Test
+    void searchAndParam() {
+        Member findMember = queryFactory
+                // TODO .select + .from == selectFrom
+                .selectFrom(QMember.member)
+                // TODO 이름이 멤버1이면서 나이가 10인 사람을 조회
+                // TODO andParam(, )
+                .where(
+                        member.username.eq("member1"),
+                        member.age.eq(10)
+                )
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
 }
+
