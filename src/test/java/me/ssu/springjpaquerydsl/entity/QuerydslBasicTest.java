@@ -129,22 +129,22 @@ public class QuerydslBasicTest extends BaseTest {
     // TODO 결과조회
     @Test
     void resultFetch() {
-        // TODO fetch, 리스트 조회 데이터 없으면 빈 리스트 반환
-        List<Member> fetch = queryFactory
-                .selectFrom(member)
-                .fetch();
-
-        // TODO fetchOne, 단 건 조회
-        Member fetchOne = queryFactory
-                .selectFrom(QMember.member)
-                .fetchOne();
-
-        // TODO
-        Member fetchFirst = queryFactory
-                .selectFrom(QMember.member)
-                // TODO fetchFirst == limit.fetchOne
-//                .limit(1).fetchOne();
-                .fetchFirst();
+//        // TODO fetch, 리스트 조회 데이터 없으면 빈 리스트 반환
+//        List<Member> fetch = queryFactory
+//                .selectFrom(member)
+//                .fetch();
+//
+//        // TODO fetchOne, 단 건 조회쓰기
+//        Member fetchOne = queryFactory
+//                .selectFrom(member)
+//                .fetchOne();
+//
+//        // TODO
+//        Member fetchFirst = queryFactory
+//                .selectFrom(member)
+//                // TODO fetchFirst == limit.fetchOne
+////                .limit(1).fetchOne();
+//                .fetchFirst();
 
         // TODO fetchResults, 페이징 정보 포함, total count 쿼리 추가 실행
         QueryResults<Member> results = queryFactory
@@ -192,4 +192,38 @@ public class QuerydslBasicTest extends BaseTest {
         assertThat(member6.getUsername()).isEqualTo("member6");
         assertThat(memberNull.getUsername()).isNull();
     }
+
+    // TODO 페이징(OrderBy를 넣어야 함)
+    // TODO 조회 건수 제한-1
+    @Test
+    void paging1() {
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1)      // 0부터 시작이라 1(하나)를 스킵
+                .limit(2)       // 최대 2건 조회
+                .fetch();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    // TODO 전체 조회수-2
+    @Test
+    void paging2() {
+        QueryResults<Member> queryResults = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1)      // 0부터 시작이라 1(하나)를 스킵
+                .limit(2)       // 최대 2건 조회
+                .fetchResults();
+
+        assertThat(queryResults.getTotal()).isEqualTo(4);
+        assertThat(queryResults.getLimit()).isEqualTo(2);
+        assertThat(queryResults.getOffset()).isEqualTo(1);
+        assertThat(queryResults.getResults().size()).isEqualTo(2);
+    }
 }
+
+
+
+
