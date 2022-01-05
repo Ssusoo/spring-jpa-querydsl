@@ -1,9 +1,9 @@
 plugins {
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
     //querydsl 추가
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-    id 'java'
 }
 
 group = 'me.ssu'
@@ -23,16 +23,14 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
     //querydsl 추가
     implementation 'com.querydsl:querydsl-jpa'
-    // 묶어서 log 보고 싶을 때
-    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
+    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
-//    implementation("com.h2database:h2")
-
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 test {
