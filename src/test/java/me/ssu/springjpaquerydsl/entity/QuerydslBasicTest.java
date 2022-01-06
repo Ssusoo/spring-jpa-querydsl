@@ -311,6 +311,50 @@ public class QuerydslBasicTest extends BaseTest {
                 .extracting("username")
                 .containsExactly("teamA", "teamB");
     }
+    /**
+     * 회원과 팀을 조인하면서, 팀 이름이 teamA인 팀만 조인.
+     * 회원은 모두 조회해라
+     * JPQL : SELECT m, t FROM member m LEFT JOIN m.team t ON t.name = 'teamA'
+     * SQL: SELECT m.*, t.* FROM Member m LEFT JOIN Team t ON m.TEAM_ID=t.id AND t.name='teamA'
+     */
+    @Test
+    void join_on_filtering() {
+        List<Tuple> result = queryFactory
+                .select(member, team)
+                .from(member)
+                .join(member.team, team)
+//                .leftJoin(member.team, team)
+//                .on(team.name.eq("teamA"))
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+    /**
+     * 연관관계가 없는 엔티티 외부 조인
+     * 회원의 이름이 팀 이름과 같은 대상 외부 조인
+     * JPQL: SELECT m, t FROM Member m LEFT JOIN Team t ON m.username = t.name
+     * SQL: SELECT m.*, t.* FROM Member m LEFT JOIN Team t ON m.username = t.name
+     */
+    @Test
+    void join_on_no_relation() {
+        entityManager.persist(new Member("teamA"));
+        entityManager.persist(new Member("teamB"));
+
+        List<Tuple> result = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(team)
+                // TODO id 값으로 하는 조인이 아니라 이름으로 필터링됨.
+                .on(member.username.eq(team.name))
+                .fetch();
+
+       for (Tuple tuple : result) {
+           System.out.println("tuple = " + tuple );
+       }
+    }
 }
 
 
