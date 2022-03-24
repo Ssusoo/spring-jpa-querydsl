@@ -574,10 +574,13 @@ public class QuerydslBasicTest extends BaseTest {
      * OrderBy에서 Case 문 함께 사용하기
      *  자바코드로 작성하기 때문에 rankPath처럼 복잡한 조건을 변수로 선언해서
      *  select절, orderBy절에서 함께 사용할 수 있다.
+     *  -0 ~ 30살이 아닌 회원을 가장 먼저 출력
+     *  -0 ~ 20살 회원 출력
+     *  -21 ~ 30살 회원 출력
      */
     @Test
     void orderByCase() {
-        // TODO NumberExpression(객체를 이요한 사칙연산)
+        // TODO NumberExpression(객체를 이용한 사칙연산)
         NumberExpression<Integer> rankPath = new CaseBuilder()
                 .when(member.age.between(0, 20)).then(2)
                 .when(member.age.between(21, 30)).then(1)
