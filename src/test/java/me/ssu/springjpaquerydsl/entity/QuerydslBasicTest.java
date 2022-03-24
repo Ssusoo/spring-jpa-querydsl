@@ -2,6 +2,8 @@ package me.ssu.springjpaquerydsl.entity;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.BaseTest;
@@ -518,11 +520,82 @@ public class QuerydslBasicTest extends BaseTest {
             System.out.println("username = " + tuple.get(member.username));
             // TODO 유저 이름의 평균 나이
             System.out.println("age" +
-                tuple.get(
-                    JPAExpressions
-                        .select(memberSub.age.avg())
-                        .from(memberSub))
+                    tuple.get(
+                            JPAExpressions
+                                    .select(memberSub.age.avg())
+                                    .from(memberSub))
             );
+        }
+    }
+
+    /**
+     * Case문
+     */
+    @Test
+    void basicCase() {
+        // TODO Case문 작성
+        List<String> result = queryFactory
+                .select(
+                        member.age
+                                .when(10).then("열살")
+                                .when(20).then("스무살")
+                                .otherwise("기타")
+                )
+                .from(member)
+                .fetch();
+
+        // TODO 데이터 뿌리기
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+    /**
+     * 복잡한 조건
+     */
+    @Test
+    void complexCase() {
+        // TODO Case문 작성
+        List<String> result = queryFactory
+                .select(
+                        new CaseBuilder()
+                                .when(member.age.between(0, 20)).then("0~20살")
+                                .when(member.age.between(21, 30)).then("21~30살")
+                                .otherwise("기타")
+                )
+                .from(member)
+                .fetch();
+
+        // TODO 데이터 뿌리기
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+    /**
+     * OrderBy에서 Case 문 함께 사용하기
+     *  자바코드로 작성하기 때문에 rankPath처럼 복잡한 조건을 변수로 선언해서
+     *  select절, orderBy절에서 함께 사용할 수 있다.
+     */
+    @Test
+    void orderByCase() {
+        // TODO NumberExpression(객체를 이요한 사칙연산)
+        NumberExpression<Integer> rankPath = new CaseBuilder()
+                .when(member.age.between(0, 20)).then(2)
+                .when(member.age.between(21, 30)).then(1)
+                .otherwise(3);
+
+        List<Tuple> result = queryFactory
+                .select(member.username, member.age, rankPath)
+                .from(member)
+                .orderBy(rankPath.desc())
+                .fetch();
+        
+        for (Tuple tuple : result) {
+
+            String username = tuple.get(member.username);
+            Integer age = tuple.get(member.age);
+            Integer rank = tuple.get(rankPath);
+
+            System.out.println("username = " + username + " age = " + age + " rank" + rank);
         }
     }
 }
