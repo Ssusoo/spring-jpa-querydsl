@@ -3,6 +3,7 @@ package me.ssu.springjpaquerydsl.entity;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -599,6 +600,39 @@ public class QuerydslBasicTest extends BaseTest {
             Integer rank = tuple.get(rankPath);
 
             System.out.println("username = " + username + " age = " + age + " rank" + rank);
+        }
+    }
+
+    /**
+     * 상수 더하기(constant)
+     */
+    @Test
+    void constant() {
+        List<Tuple> result = queryFactory
+                .select(member.username, Expressions.constant("A"))
+                .from(member)
+                .fetch();
+
+        for(Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+    /**
+     * 문자 더하기
+     *  concat(두 개의 문자열을 하나의 문자열로 만들어주는 역할 함수)
+     */
+    @Test
+    void concat() {
+        // TODO {username}_{age}
+        List<String> result = queryFactory
+                // TODO concat은 문자만 됨.
+                .select(member.username.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .where(member.username.eq("member1"))
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
         }
     }
 }
