@@ -7,6 +7,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.BaseTest;
 import me.ssu.springjpaquerydsl.dto.MemberDto;
+import me.ssu.springjpaquerydsl.dto.QMemberDto;
 import me.ssu.springjpaquerydsl.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -218,6 +219,21 @@ public class QuerydslIntermediateTest extends BaseTest {
 
         for (UserDto userDto : result) {
             System.out.println("userDto = " + userDto);
+        }
+    }
+
+    /**
+     * @QueryProjection 활용
+     */
+    @Test
+    void findDtoByQueryProjection() {
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 }

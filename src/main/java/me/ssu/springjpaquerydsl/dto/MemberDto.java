@@ -1,5 +1,6 @@
 package me.ssu.springjpaquerydsl.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,8 @@ public class MemberDto {
     private String username;
     private int age;
 
+    // TODO (other compileQuerydsl : DTO도 Q File로 생성 됨
+    @QueryProjection
     public MemberDto(String username, int age) {
         this.username = username;
         this.age = age;
