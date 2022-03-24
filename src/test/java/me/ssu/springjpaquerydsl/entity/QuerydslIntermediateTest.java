@@ -1,8 +1,10 @@
 package me.ssu.springjpaquerydsl.entity;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.BaseTest;
+import me.ssu.springjpaquerydsl.dto.MemberDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -70,6 +72,79 @@ public class QuerydslIntermediateTest extends BaseTest {
 
             System.out.println("username=" + username);
             System.out.println("age=" + age);
+        }
+    }
+
+    /**
+     * 순수 JPA에서 DTO 조회
+     */
+    @Test
+    void findDtoJPQL() {
+        // TODO "select m from Member m", MemberDto.class != 이부분은 Member Entity를 조회하는 거라
+        //  둘의 타입이 맞지 않아 오류가 남.
+        //  new 오퍼레이션 문법
+        List<MemberDto> result = entityManager.createQuery(
+                "select new me.ssu.springjpaquerydsl.dto.MemberDto(m.username, m.age) " +
+                        "from Member m", MemberDto.class
+        ).getResultList();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("" + memberDto);
+        }
+    }
+
+    /**
+     * 순수 JPA에서 DTO 조회(QueryDSL)
+     *  Setter / Getter
+     */
+    @Test
+    void findDtoBySetter() {
+        // TODO bean(Getter / Setter)
+        List<MemberDto> result = queryFactory.select(Projections.bean(MemberDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    /**
+     * 순수 JPA에서 DTO 조회(QueryDSL)
+     *  필드 직접 접근(private String username, Int age)
+     *  private이지만 라이브러리에서 알아서 함.
+     */
+    @Test
+    void findDtoByField() {
+        // TODO filed()
+        List<MemberDto> result = queryFactory.select(Projections.fields(MemberDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    /**
+     * 순수 JPA에서 DTO 조회(QueryDSL)
+     *  생성자 접근(private String username, Int age)
+     */
+    @Test
+    void findDtoByConstructor() {
+        // TODO constructor()
+        List<MemberDto> result = queryFactory.select(Projections.constructor(MemberDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 }
