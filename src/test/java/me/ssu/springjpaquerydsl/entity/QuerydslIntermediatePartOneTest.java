@@ -16,7 +16,7 @@ import java.util.List;
 
 import static me.ssu.springjpaquerydsl.entity.QMember.member;
 
-public class QuerydslIntermediateTest extends BaseTest {
+public class QuerydslIntermediatePartOneTest extends BaseTest {
 
     @BeforeEach
     public void before() {
