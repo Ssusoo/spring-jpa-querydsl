@@ -1,10 +1,13 @@
 package me.ssu.springjpaquerydsl.entity;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.BaseTest;
 import me.ssu.springjpaquerydsl.dto.MemberDto;
+import me.ssu.springjpaquerydsl.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -145,6 +148,76 @@ public class QuerydslIntermediateTest extends BaseTest {
 
         for (MemberDto memberDto : result) {
             System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    /**
+     * 순수 JPA에서 DTO 조회(QueryDSL)
+     *  별칭이 다를 때
+     */
+    @Test
+    void findUserDto() {
+        // TODO filed()
+        List<UserDto> result = queryFactory.select(Projections.fields(UserDto.class,
+                        // TODO 필드 명이 맞아야 되는데 여기서 MemberDto.class 값이다
+//                        member.username,
+//                        member.age))
+                        // TODO .as로 처리하기
+                        member.username.as("name"),
+                        member.age))
+                .from(member)
+                .fetch();
+
+        for (UserDto userDto : result) {
+            System.out.println("userDto = " + userDto);
+        }
+    }
+    /**
+     * 순수 JPA에서 DTO 조회(QueryDSL)
+     *  별칭이 다를 때 여기서 또 서브쿼리 별칭을 처리할 때
+     */
+    @Test
+    void findUserDtoSubQuery() {
+        // TODO 서브쿼리 만들기
+        QMember memberSub = new QMember("memberSub");
+
+        // TODO filed()
+        List<UserDto> result = queryFactory.select(Projections.fields(UserDto.class,
+                        // TODO 필드 명이 맞아야 되는데 여기서 MemberDto.class 값이다
+//                        member.username,
+//                        member.age))
+                        // TODO .as로 처리하기
+                        member.username.as("name"),
+                        // TODO SubQuery(age) : 최대값으로 나올 수 있게
+                        //  ExpressionUtis와(... alias:"age"으로)
+                        ExpressionUtils.as(JPAExpressions
+                                .select(memberSub.age.max())
+                                .from(memberSub), "age")
+                        )
+                )
+                .from(member)
+                .fetch();
+
+        for (UserDto userDto : result) {
+            System.out.println("userDto = " + userDto);
+        }
+    }
+
+    /**
+     * 순수 JPA에서 DTO 조회(QueryDSL)
+     *  별칭이 다를 때 UserDto 생성자 접근
+     */
+    @Test
+    void findUserDtoConstructor() {
+        // TODO constructor()
+        List<UserDto> result = queryFactory.select(Projections.constructor(UserDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+
+        for (UserDto userDto : result) {
+            System.out.println("userDto = " + userDto);
         }
     }
 }
