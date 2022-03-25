@@ -21,7 +21,7 @@ import static org.springframework.util.StringUtils.*;
 // TODO DAO와 같은 개념(Entity 조회하기 위한 어떤 계층)
 @Repository
 // TODO 생성자 생성없이 QueryDSL 활용하기!
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class MemberJpaRepository {
 
     // TODO 순수 JPA이기 때문에 EntityManager가 필요함
@@ -30,10 +30,10 @@ public class MemberJpaRepository {
     private final JPAQueryFactory queryFactory;
 
     // TODO 생성자 사용하는 방법
-//    public MemberJpaRepository(EntityManager entityManager) {
-//        this.entityManager = entityManager;
-//        this.queryFactory = new JPAQueryFactory(entityManager);
-//    }
+    public MemberJpaRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        this.queryFactory = new JPAQueryFactory(entityManager);
+    }
 
     // TODO 생성자에서 주입하는 방법
 //    public MemberJpaRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
@@ -96,7 +96,7 @@ public class MemberJpaRepository {
 
         // TODO 팀명 조건
         if (hasText(condition.getTeamName())) {
-            builder.and(team.name.eq(condition.getUsername()));
+            builder.and(team.name.eq(condition.getTeamName()));
         }
 
         // TODO 특정 나이 이상일 때 조건

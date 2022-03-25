@@ -2,6 +2,8 @@ package me.ssu.springjpaquerydsl.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.JpaBaseTest;
+import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
+import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
 import me.ssu.springjpaquerydsl.entity.Member;
 import me.ssu.springjpaquerydsl.entity.Team;
 import org.junit.jupiter.api.DisplayName;
@@ -80,7 +82,7 @@ class MemberJpaRepositoryPartOneTest extends JpaBaseTest {
         assertThat(result2).containsExactly(member);
     }
     /**
-     *
+     *  동적 쿼리와 성능 테스트 Test
      */
     @Test
     void searchTest() {
@@ -105,6 +107,16 @@ class MemberJpaRepositoryPartOneTest extends JpaBaseTest {
         entityManager.persist(member3);
         entityManager.persist(member4);
 
+        // TODO 검색 조건
+        MemberSearchCondition condition = new MemberSearchCondition();
+//        condition.setAgeGoe(35);
+//        condition.setAgeLoe(40);
+//        condition.setTeamName("teamB");
 
+        // TODO 동적쿼리와 성능 최적화
+        List<MemberTeamDto> result = memberJpaRepository.searchByBuilder(condition);
+
+        // TODO 결과값 유무
+//        assertThat(result).extracting("username").containsExactly("member3", "member4");
     }
 }
