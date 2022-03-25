@@ -19,9 +19,16 @@ public class MemberJpaRepository {
     // TODO QueryDSL을 사용하려면 JpaQueryFactory가 필요함.
     private final JPAQueryFactory queryFactory;
 
-    public MemberJpaRepository(EntityManager entityManager) {
+    // TODO 생성자 사용하는 방법
+//    public MemberJpaRepository(EntityManager entityManager) {
+//        this.entityManager = entityManager;
+//        this.queryFactory = new JPAQueryFactory(entityManager);
+//    }
+
+    // TODO 생성자에서 주입하는 방법
+    public MemberJpaRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
         this.entityManager = entityManager;
-        this.queryFactory = new JPAQueryFactory(entityManager);
+        this.queryFactory = queryFactory;
     }
 
     // TODO JPA Save
