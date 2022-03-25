@@ -2,7 +2,6 @@ package me.ssu.springjpaquerydsl.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.entity.Member;
-import me.ssu.springjpaquerydsl.entity.QMember;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
