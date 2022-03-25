@@ -2,6 +2,7 @@ package me.ssu.springjpaquerydsl.entity;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.common.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -132,7 +133,7 @@ public class QuerydslIntermediatePartTwoTest extends BaseTest {
      */
     // TODO @Transaction 시키기면 Rollback하기 때문에
     @Test
-    @Commit
+//    @Commit
     void bulkUpdate() {
         // TODO 벌크 연산 실행되기 전
         //  member1 = 10 -> DB member1
@@ -167,6 +168,66 @@ public class QuerydslIntermediatePartTwoTest extends BaseTest {
 
         for (Member member1 : result) {
             System.out.println("member1 = " + member1);
+        }
+    }
+
+    /**
+     *  기존 숫자에 1 더하기
+     */
+    @Test
+    void bulkAdd() {
+        long count = queryFactory.update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+    }
+    /**
+     *  쿼리 한 번으로 대량 데이터 삭제
+     */
+    @Test
+    void bulkDelete() {
+        long count = queryFactory.delete(member)
+                .where(member.age.gt(18))
+                .execute();
+    }
+
+    /**
+     *  QueryDSL에서 Function 호출하기
+     */
+    @Test
+    void sqlFunction() {
+        List<String> result = queryFactory
+                .select(
+                        Expressions.stringTemplate(
+                                "function('replace', {0}, {1}, {2})",
+                                // TODO 회원 유저 이름에서 member라는 단어를 M으로 바꿀 거임.
+                                member.username, "member", "M"))
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    /**
+     *  소문자로 변경해서 비교하기
+     */
+    @Test
+    void sqlFunction2() {
+        List<String> result = queryFactory
+                .select(member.username)
+                .from(member)
+//                .where(
+//                        // TODO 일반적으로(lower,Upper 등)QueryDSL에서 사용하고 있음.-1
+//                        member.username.eq(
+//                                Expressions.stringTemplate("function('lower', {0}", member.username))
+//                )
+                // TODO 두 번째 방법-2
+                .where(member.username.eq(member.username.lower()))
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
         }
     }
 }
