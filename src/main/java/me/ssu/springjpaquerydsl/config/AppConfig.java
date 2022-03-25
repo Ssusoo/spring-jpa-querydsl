@@ -10,8 +10,8 @@ import javax.persistence.EntityManager;
 public class AppConfig {
 
     // TODO Querydsl Bean으로 사용
-    @Bean
-    JPAQueryFactory queryFactory(EntityManager entityManager) {
-        return new JPAQueryFactory(entityManager);
-    }
+//    @Bean
+//    JPAQueryFactory queryFactory(EntityManager entityManager) {
+//        return new JPAQueryFactory(entityManager);
+//    }
 }

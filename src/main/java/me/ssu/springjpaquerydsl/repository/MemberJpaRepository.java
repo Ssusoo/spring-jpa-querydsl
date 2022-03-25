@@ -1,6 +1,7 @@
 package me.ssu.springjpaquerydsl.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import me.ssu.springjpaquerydsl.entity.Member;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,8 @@ import static me.ssu.springjpaquerydsl.entity.QMember.*;
 
 // TODO DAO와 같은 개념(Entity 조회하기 위한 어떤 계층)
 @Repository
+// TODO 생성자 생성없이 QueryDSL 활용하기
+@RequiredArgsConstructor
 public class MemberJpaRepository {
 
     // TODO 순수 JPA이기 때문에 EntityManager가 필요함
@@ -26,10 +29,10 @@ public class MemberJpaRepository {
 //    }
 
     // TODO 생성자에서 주입하는 방법
-    public MemberJpaRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
-        this.entityManager = entityManager;
-        this.queryFactory = queryFactory;
-    }
+//    public MemberJpaRepository(EntityManager entityManager, JPAQueryFactory queryFactory) {
+//        this.entityManager = entityManager;
+//        this.queryFactory = queryFactory;
+//    }
 
     // TODO JPA Save
     public void save(Member member) {
