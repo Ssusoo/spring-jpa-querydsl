@@ -1,15 +1,22 @@
 package me.ssu.springjpaquerydsl.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
+import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
+import me.ssu.springjpaquerydsl.dto.QMemberTeamDto;
 import me.ssu.springjpaquerydsl.entity.Member;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-import static me.ssu.springjpaquerydsl.entity.QMember.*;
+import static me.ssu.springjpaquerydsl.entity.QMember.member;
+import static me.ssu.springjpaquerydsl.entity.QTeam.team;
+import static org.springframework.util.StringUtils.*;
 
 // TODO DAO와 같은 개념(Entity 조회하기 위한 어떤 계층)
 @Repository
@@ -71,6 +78,52 @@ public class MemberJpaRepository {
         return queryFactory
                 .selectFrom(member)
                 .where(member.username.eq(username))
+                .fetch();
+    }
+
+    // TODO MemberSearchCondition 검색조건(동적 쿼리와 성능 최적화)
+    //  DTO 조회시 Entity로 조회하는 게 아니며,
+    //  지연로딩을 사용할 수 없기 때문에 N+1 문제가 발생하지 않음.
+    public List<MemberTeamDto> searchByBuilder(MemberSearchCondition condition) {
+        // TODO 아래 조건들이 돌아갈 수 있게 Builder 만들기-2
+        BooleanBuilder builder = new BooleanBuilder();
+
+        // TODO import org.springframework.util.StringUtils; static import로 줄이기
+        //  회원명 조건
+        if (hasText(condition.getUsername())) {     // null, ""일 수도 있음.
+            builder.and(member.username.eq(condition.getUsername()));
+        }
+
+        // TODO 팀명 조건
+        if (hasText(condition.getTeamName())) {
+            builder.and(team.name.eq(condition.getUsername()));
+        }
+
+        // TODO 특정 나이 이상일 때 조건
+        if (condition.getAgeGoe() != null) {
+            builder.and(member.age.goe(condition.getAgeLoe()));
+        }
+
+        // TODO 특정 나이 이하일 때 조건
+        if (condition.getAgeLoe() != null) {
+            builder.and(member.age.loe(condition.getAgeLoe()));
+        }
+
+        // TODO 빌더를 통해 동적쿼리 처리하기-1
+        return queryFactory
+                .select(new QMemberTeamDto(
+                        // TODO 멤버는 필드명의 아이디이기 때문에 as()
+                        member.id.as("memberId"),
+                        member.username,
+                        member.age,
+                        team.id.as("teamId"),
+                        team.name.as("teamName")
+                ))
+                .from(member)
+                // TODO Member와 Team Join하기(Team의 데이터를 다 가져오기 때문에
+                .leftJoin(member.team, team)
+                // TODO builder 빼먹지 말기-3
+                .where(builder)
                 .fetch();
     }
 }
