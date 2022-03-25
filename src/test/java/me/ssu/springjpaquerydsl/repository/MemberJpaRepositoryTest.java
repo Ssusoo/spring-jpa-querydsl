@@ -13,6 +13,9 @@ class MemberJpaRepositoryTest extends JpaBaseTest {
 
     /**
      * 순수 JPA Test
+     *  Repository에서 Query문이 오타가 나도
+     *  1) 고객이 실수하는 Runtime 시점이 되서야 알 수 있다는 단점이 있음.
+     *  2) .setParameter("username", username)의 단점이 있음.
      */
     // TODO 여기를 빠져나가면 트랜잭션에서 세션 밖으로 나왔을 때
     //  Detached(JPA가 더이상 관리하지 않음) 상태가 되는 거임.
@@ -47,6 +50,8 @@ class MemberJpaRepositoryTest extends JpaBaseTest {
 
     /**
      * QueryDSL Test
+     *  1) Compile 시점에서 오타를 발견할 수 있기 때문에 장점임.
+     *  2) .where(member.username.eq(username)) 기본적으로 파라미터 바인딩이라는 장점.
      */
     @Test
     @DisplayName("Querydsl - Test")
