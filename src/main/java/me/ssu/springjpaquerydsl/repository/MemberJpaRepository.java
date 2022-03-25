@@ -13,7 +13,7 @@ import static me.ssu.springjpaquerydsl.entity.QMember.*;
 
 // TODO DAO와 같은 개념(Entity 조회하기 위한 어떤 계층)
 @Repository
-// TODO 생성자 생성없이 QueryDSL 활용하기
+// TODO 생성자 생성없이 QueryDSL 활용하기!
 @RequiredArgsConstructor
 public class MemberJpaRepository {
 
