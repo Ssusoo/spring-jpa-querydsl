@@ -1,7 +1,7 @@
 package me.ssu.springjpaquerydsl.common;
 
 
-import me.ssu.springjpaquerydsl.repository.MemberJpaRepository;
+import me.ssu.springjpaquerydsl.repository.MemberRealJpaRepository;
 import me.ssu.springjpaquerydsl.repository.MemberSpringJpaRepository;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class JpaBaseTest {
     protected EntityManager entityManager;
 
     @Autowired
-    protected MemberJpaRepository memberJpaRepository;
+    protected MemberRealJpaRepository memberJpaRepository;
 
     @Autowired
     protected MemberSpringJpaRepository memberSpringJpaRepository;

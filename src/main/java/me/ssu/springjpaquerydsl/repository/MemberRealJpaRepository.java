@@ -21,7 +21,7 @@ import static org.springframework.util.StringUtils.hasText;
 @Repository
 // TODO 생성자 생성없이 QueryDSL 활용하기!
 //@RequiredArgsConstructor
-public class MemberJpaRepository {
+public class MemberRealJpaRepository {
 
     // TODO 순수 JPA이기 때문에 EntityManager가 필요함
     private final EntityManager entityManager;
@@ -29,7 +29,7 @@ public class MemberJpaRepository {
     private final JPAQueryFactory queryFactory;
 
     // TODO 생성자 사용하는 방법
-    public MemberJpaRepository(EntityManager entityManager) {
+    public MemberRealJpaRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
