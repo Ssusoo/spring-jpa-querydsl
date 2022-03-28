@@ -109,14 +109,22 @@ class MemberJpaRepositoryPartOneTest extends JpaBaseTest {
 
         // TODO 검색 조건
         MemberSearchCondition condition = new MemberSearchCondition();
-//        condition.setAgeGoe(35);
-//        condition.setAgeLoe(40);
+
+        // TODO 조건 전부(동적쿼리)
+        condition.setAgeGoe(35);
+        condition.setAgeLoe(40);
+        condition.setTeamName("teamB");
+
+        // TODO 전체 조건에서 teamB만 가져올 때(동적쿼리)
 //        condition.setTeamName("teamB");
 
         // TODO 동적쿼리와 성능 최적화
         List<MemberTeamDto> result = memberJpaRepository.searchByBuilder(condition);
 
-        // TODO 결과값 유무
+        // TODO 조건 전부
+        assertThat(result).extracting("username").containsExactly("member4");
+
+        // TODO 전체 조건에서 teamB만 가져올 때
 //        assertThat(result).extracting("username").containsExactly("member3", "member4");
     }
 }
