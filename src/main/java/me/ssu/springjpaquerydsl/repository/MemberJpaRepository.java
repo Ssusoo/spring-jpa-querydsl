@@ -153,7 +153,7 @@ public class MemberJpaRepository {
 
     // TODO Where절에 파라미터(동적쿼리)-2
     //  Predicate -> BooleanExpression(import QueryDSL)
-    //  BooleanExpression으로 하면 AND OR 조합이 가능하하다(재사용도 가능하다)
+    //  BooleanExpression으로 하면 AND OR BetWeen 조합도 가능하하다(재사용도 가능하다)
     private BooleanExpression usernameEq(String username) {
         return hasText(username) ? member.username.eq(username) : null;
     }
@@ -169,5 +169,25 @@ public class MemberJpaRepository {
 
     private BooleanExpression ageLoe(Integer ageLoe) {
         return ageLoe != null ? member.age.loe(ageLoe) : null;
+    }
+
+    // TODO Where절의 장점(Entity로 조회할 때 조립도 가능함)
+    public List<Member> searchMember(MemberSearchCondition condition) {
+        return queryFactory
+                .selectFrom(member)
+                .leftJoin(member.team, team)
+                // TODO 위에서 썼던 메소드를 재사용할 수 있는 장점-1
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        // TODO 조립이 가능하다-3(Null 체크만 조심하면 됨)
+                        ageBetween(condition.getAgeLoe(), condition.getAgeGoe())
+                )
+                .fetch();
+    }
+
+    // TODO Where절의 장점(조립이 가능하다)-2
+    private BooleanExpression ageBetween(int ageLoe, int ageGoe) {
+        return ageGoe(ageLoe).and(ageGoe(ageGoe));
     }
 }
