@@ -1,7 +1,7 @@
 spring:
-  # Local 프로파일 설정
+  # Test 프로파일 설정
   profiles:
-    active: local
+    active: test
   datasource:
     url: jdbc:h2:tcp://localhost/~/querydsl
     username: sa
