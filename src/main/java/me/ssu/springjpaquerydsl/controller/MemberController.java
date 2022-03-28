@@ -1,6 +1,5 @@
 package me.ssu.springjpaquerydsl.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
 import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
