@@ -124,6 +124,61 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
     //  데이터 내용과 전체 카운트를 별도로 조회하는 방법
     @Override
     public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
-        return null;
+        // TODO 전체 카운터를 조회하는 방법과 달리
+        //  QueryResults<MemberTeamDto> -> List<MemberTeamDto>로 변경-1
+        //  전체 카운터를 조회하는 방법에서는 fetchResults를 이용해 QueryDSL이 Total Count를
+        //  알아서 날리게 했지만 이 방법은 내가 직접 totalCount를 날리는 거임.
+        List<MemberTeamDto> content = queryFactory
+                .select(new QMemberTeamDto(
+                        // TODO 멤버는 필드명의 아이디이기 때문에 as()
+                        member.id.as("memberId"),
+                        member.username,
+                        member.age,
+                        team.id.as("teamId"),
+                        team.name.as("teamName"))
+                )
+                .from(member)
+                // TODO Member와 Team Join하기(Team의 데이터를 다 가져오기 때문에
+                .leftJoin(member.team, team)
+                // TODO Where절에 파라미터(동적쿼리)
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                )
+                // TODO 몇 번을 스킵하고 몇 번부터 시작할 거야.
+                .offset(pageable.getOffset())
+                // TODO 한 번 조회할 때 몇 개까지 조회할 거야.
+                .limit(pageable.getPageSize())
+                /* TODO 결과조회 fetch -> fetchResult
+                    - fetch() : 리스트 조회, 데이터 없으면 빈 리스트 반환
+                    - fetchOne() : 단 건 조회
+                    - 결과가 없으면 : null
+                    - 결과가 둘 이상이면 : com.querydsl.core.NonUniqueResultException
+                    - fetchFirst() : limit(1).fetchOne()
+                    - fetchResults() : 페이징 정보 포함, total count 쿼리 추가 실행
+                    - fetchCount() : count 쿼리로 변경해서 count 수 조회
+                */
+                // TODO fetchResults -> fetch로 변경하기-2
+                .fetch();
+        // TODO totalCount Query를 추가로 만들기-3
+        //  내가 직접 날리는 totalCount의 장점은
+        //  가끔 Join이 필요 없을 때가 있음.
+        //  content는 어렵지만 totalCount는 쉽게 처리하는 경우가 생긴다.
+        //  이번 방법에서 성능 최적화가 가능함. 위의 방법에서는 성능 최적화를 하지 못한다.
+        //  이유는 QueryDsl이 totalCount까지 같이 날리고 Join까지 다 되기 때문에
+        long total = queryFactory.select(member)
+                .from(member.team, team)
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                )
+                .fetchCount();
+        // TODO 데이터 반환하기
+        //  PageImpl이 스프링 데이터 JPA Page의 구현체임.
+        return new PageImpl<>(content, pageable, total);
     }
 }
