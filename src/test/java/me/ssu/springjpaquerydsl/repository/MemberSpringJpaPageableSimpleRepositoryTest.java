@@ -49,11 +49,14 @@ public class MemberSpringJpaPageableSimpleRepositoryTest extends JpaBaseTest {
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         // TODO 전체 카운트를 한번에 조회하는 단순한 방법
-        Page<MemberTeamDto> result = memberSpringJpaRepository.searchPageSimple(condition, pageRequest);
+        Page<MemberTeamDto> result = memberSpringJpaRepository
+                .searchPageSimple(condition, pageRequest);
 
         // TODO 페이지에서 보여주는 갯수 검증
         assertThat(result.getSize()).isEqualTo(3);
         // TODO Content 검증
-        assertThat(result.getContent()).extracting("username").containsExactly("member1", "member2", "member3");
+        assertThat(result.getContent())
+                .extracting("username")
+                .containsExactly("member1", "member2", "member3");
     }
 }
