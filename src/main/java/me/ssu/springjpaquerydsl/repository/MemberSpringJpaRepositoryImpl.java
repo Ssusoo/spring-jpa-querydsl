@@ -68,6 +68,7 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
         return ageLoe != null ? member.age.loe(ageLoe) : null;
     }
 
+    // TODO
     @Override
     public List<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
         return queryFactory
