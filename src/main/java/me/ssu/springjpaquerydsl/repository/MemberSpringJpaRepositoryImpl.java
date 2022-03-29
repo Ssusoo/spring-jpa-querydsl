@@ -52,35 +52,48 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
                 )
                 .fetch();
     }
-
-
-    @Override
-    public Page<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
-        return null;
-    }
-
     // TODO Where절에 파라미터(동적쿼리)-2
     //  Predicate -> BooleanExpression(import QueryDSL)
     //  BooleanExpression으로 하면 AND OR BetWeen 조합도 가능하하다(재사용도 가능하다)
     private BooleanExpression usernameEq(String username) {
         return hasText(username) ? member.username.eq(username) : null;
     }
-
     private BooleanExpression teamNameEq(String teamName) {
         return hasText(teamName) ? team.name.eq(teamName) : null;
     }
-
-
     private BooleanExpression ageGoe(Integer ageGoe) {
         return ageGoe!= null ? member.age.goe(ageGoe) : null;
     }
-
     private BooleanExpression ageLoe(Integer ageLoe) {
         return ageLoe != null ? member.age.loe(ageLoe) : null;
+    }
+
+    @Override
+    public List<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
+        return queryFactory
+                .select(new QMemberTeamDto(
+                        // TODO 멤버는 필드명의 아이디이기 때문에 as()
+                        member.id.as("memberId"),
+                        member.username,
+                        member.age,
+                        team.id.as("teamId"),
+                        team.name.as("teamName"))
+                )
+                .from(member)
+                // TODO Member와 Team Join하기(Team의 데이터를 다 가져오기 때문에
+                .leftJoin(member.team, team)
+                // TODO Where절에 파라미터(동적쿼리)-1
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
+        return null;
     }
 }
