@@ -1,11 +1,13 @@
 package me.ssu.springjpaquerydsl.repository;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
 import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
 import me.ssu.springjpaquerydsl.dto.QMemberTeamDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -68,10 +70,12 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
         return ageLoe != null ? member.age.loe(ageLoe) : null;
     }
 
-    // TODO
+    // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리(Page, Pageable)-2-1
+    //  전체 카운트를 한번에 조회하는 단순한 방법
+    //  파라미터로 Pageable이 넘어오는데 기본적으로 of이나 전체 페이지 수를 알 수 있다.
     @Override
-    public List<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
-        return queryFactory
+    public Page<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
+        QueryResults<MemberTeamDto> results = queryFactory
                 .select(new QMemberTeamDto(
                         // TODO 멤버는 필드명의 아이디이기 때문에 as()
                         member.id.as("memberId"),
@@ -90,11 +94,35 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
                         ageGoe(condition.getAgeGoe()),
                         ageLoe(condition.getAgeLoe())
                 )
-                .fetch();
+                // TODO 몇 번을 스킵하고 몇 번부터 시작할 거야.
+                .offset(pageable.getOffset())
+                // TODO 한 번 조회할 때 몇 개까지 조회할 거야.
+                .limit(pageable.getPageSize())
+                /* TODO 결과조회 fetch -> fetchResult
+                    - fetch() : 리스트 조회, 데이터 없으면 빈 리스트 반환
+                    - fetchOne() : 단 건 조회
+                    - 결과가 없으면 : null
+                    - 결과가 둘 이상이면 : com.querydsl.core.NonUniqueResultException
+                    - fetchFirst() : limit(1).fetchOne()
+                    - fetchResults() : 페이징 정보 포함, total count 쿼리 추가 실행
+                    - fetchCount() : count 쿼리로 변경해서 count 수 조회
+                */
+                .fetchResults();
+        // TODO 데이터 꺼내기(실제 데이터가 되는 거임) 쿼리 한 방
+        List<MemberTeamDto> content = results.getResults();
+
+        // TODO total count 쿼리 두
+        long total = results.getTotal();
+
+        // TODO 데이터 반환하기
+        return new PageImpl<>(condition, pageable, total)
+
     }
 
+    // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리(Page, Pageable)-2-2
+    //  데이터 내용과 전체 카운트를 별도로 조회하는 방법
     @Override
-    public List<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
+    public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
         return null;
     }
 }

@@ -16,9 +16,9 @@ public interface MemberSpringJpaRepositoryCustom {
 
     // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리(Page, Pageable)-2-1
     //  전체 카운트를 한번에 조회하는 단순한 방법
-    List<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable);
+    Page<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable);
 
     // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리(Page, Pageable)-2-2
     //  데이터 내용과 전체 카운트를 별도로 조회하는 방법
-    List<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable);
+    Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable);
 }
