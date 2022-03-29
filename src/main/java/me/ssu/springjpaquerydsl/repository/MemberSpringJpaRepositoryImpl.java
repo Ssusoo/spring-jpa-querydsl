@@ -108,6 +108,7 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
                     - fetchCount() : count 쿼리로 변경해서 count 수 조회
                 */
                 .fetchResults();
+
         // TODO 데이터 꺼내기(실제 데이터가 되는 거임) 쿼리 한 방
         List<MemberTeamDto> content = results.getResults();
 
@@ -115,8 +116,8 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
         long total = results.getTotal();
 
         // TODO 데이터 반환하기
-        return new PageImpl<>(condition, pageable, total)
-
+        //  PageImpl이 스프링 데이터 JPA Page의 구현체임.
+        return new PageImpl<>(content, pageable, total);
     }
 
     // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리(Page, Pageable)-2-2
