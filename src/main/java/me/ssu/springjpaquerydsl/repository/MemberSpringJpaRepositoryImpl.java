@@ -2,13 +2,16 @@ package me.ssu.springjpaquerydsl.repository;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
 import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
 import me.ssu.springjpaquerydsl.dto.QMemberTeamDto;
+import me.ssu.springjpaquerydsl.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -180,5 +183,67 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
         // TODO 데이터 반환하기
         //  PageImpl이 스프링 데이터 JPA Page의 구현체임.
         return new PageImpl<>(content, pageable, total);
+    }
+
+
+    // TODO Count 쿼리 최적화
+    @Override
+    public Page<MemberTeamDto> searchPagePerformanceOptimization(MemberSearchCondition condition, Pageable pageable) {
+
+        List<MemberTeamDto> content = queryFactory
+                .select(
+                        new QMemberTeamDto (
+                        // TODO 멤버는 필드명의 아이디이기 때문에 as()
+                        member.id.as("memberId"),
+                        member.username,
+                        member.age,
+                        team.id.as("teamId"),
+                        team.name.as("teamName")
+                        )
+                )
+                .from(member)
+                // TODO Member와 Team Join하기(Team의 데이터를 다 가져오기 때문에
+                .leftJoin(member.team, team)
+                // TODO Where절에 파라미터(동적쿼리)
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                )
+                // TODO 몇 번을 스킵하고 몇 번부터 시작할 거야.
+                .offset(pageable.getOffset())
+                // TODO 한 번 조회할 때 몇 개까지 조회할 거야.
+                .limit(pageable.getPageSize())
+                /* TODO 결과조회 fetch -> fetchResult
+                    - fetch() : 리스트 조회, 데이터 없으면 빈 리스트 반환
+                    - fetchOne() : 단 건 조회
+                    - 결과가 없으면 : null
+                    - 결과가 둘 이상이면 : com.querydsl.core.NonUniqueResultException
+                    - fetchFirst() : limit(1).fetchOne()
+                    - fetchResults() : 페이징 정보 포함, total count 쿼리 추가 실행
+                    - fetchCount() : count 쿼리로 변경해서 count 수 조회
+                */
+                // TODO 리스트 조회, 데이터 없으면 빈 리스트 반환
+                .fetch();
+
+        // TODO totalCount
+        JPAQuery<Member> countQuery = queryFactory.select(member)
+                .from(member.team, team)
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                );
+
+        // TODO 자바 8에서 fetchCount()를 해야 실제 countQuery가 날라감.
+//        countQuery.fetchCount();
+
+        // TODO PageableExcutionUtils를 통해 countent와 pageable과 함수(countQuery.fetchCount())를 넘기면 됨.
+        //  함수이기 때문에 구분이 실행이 안된다. content와 pageable의 totalcount를 보고 난 후
+        //  페이지 시작이면서 컨텐츠 사이즈가 페이지 사이즈보다 작으면 함수(countQuery.fetchCount()) 자체를 실행하지 않는다.
+        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchCount());
+//        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 }
