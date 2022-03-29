@@ -19,5 +19,5 @@ public interface MemberSpringJpaRepositoryCustom {
     Page<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable);
     // TODO 데이터 내용과 전체 카운트를 별도로 조회하는 방법
     Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable);
-    
+
 }

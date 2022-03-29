@@ -5,6 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
 import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
 import me.ssu.springjpaquerydsl.dto.QMemberTeamDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -49,6 +51,17 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
                         ageLoe(condition.getAgeLoe())
                 )
                 .fetch();
+    }
+
+
+    @Override
+    public Page<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
+        return null;
     }
 
     // TODO Where절에 파라미터(동적쿼리)-2
