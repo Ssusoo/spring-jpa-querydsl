@@ -14,6 +14,9 @@ import static me.ssu.springjpaquerydsl.entity.QMember.member;
 import static me.ssu.springjpaquerydsl.entity.QTeam.team;
 import static org.springframework.util.StringUtils.hasText;
 
+/**
+ *  커스텀한 QueryDSL이 아니라 조회 전용
+ */
 // TODO Search가 API나 어떤 화면에 특화된 기능이라면
 //  커스텀하게 만드는 게 아니라 조회 전용으로 따로 빼주는 것도 하나의 방법임.
 @Repository
