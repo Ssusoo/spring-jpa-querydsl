@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * 사용자 정의 인터페이스 작성(커스텀한 QueryDSL)-1
+ */
 // TODO 사용자 정의 인터페이스 작성-1
 // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리(Page, Pageable)-2
 public interface MemberSpringJpaRepositoryCustom {
