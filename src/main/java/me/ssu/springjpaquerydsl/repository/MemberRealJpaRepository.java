@@ -17,6 +17,9 @@ import static me.ssu.springjpaquerydsl.entity.QMember.member;
 import static me.ssu.springjpaquerydsl.entity.QTeam.team;
 import static org.springframework.util.StringUtils.hasText;
 
+/**
+ * 순수 JPA(!= 스프링 데이터 JPA와 다르다)
+ */
 // TODO DAO와 같은 개념(Entity 조회하기 위한 어떤 계층)
 @Repository
 // TODO 생성자 생성없이 QueryDSL 활용하기!
