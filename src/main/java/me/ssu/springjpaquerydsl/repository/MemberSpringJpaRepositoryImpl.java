@@ -20,6 +20,9 @@ import static me.ssu.springjpaquerydsl.entity.QMember.member;
 import static me.ssu.springjpaquerydsl.entity.QTeam.team;
 import static org.springframework.util.StringUtils.hasText;
 
+/**
+ * 사용자 정의 인터페이스 구현(커스텀한 QueryDSL)-2.
+ */
 // TODO 내가 정의한 인터페이스를 받는다
 //  스프링 데이터 JPA 인터페이스 클래스 + Impl 이름 붙이기
 public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryCustom {
