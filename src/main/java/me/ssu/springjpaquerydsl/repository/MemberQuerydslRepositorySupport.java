@@ -83,7 +83,7 @@ public class MemberQuerydslRepositorySupport extends Querydsl4RepositorySupport 
 	    }
     */
     // TODO 내가 작성한 Querydsl4RepositorySupport
-    //  전체 카운트를 한번에 조회하는 단순한 방법!
+    //  전체 카운트를 한번에 조회하는 단순한 방법
     public Page<Member> applyPagination(MemberSearchCondition condition, Pageable pageable) {
         // TODO 커멘트 + OPTION + N == 인라인 합쳐짐.
         Page<Member> result = applyPagination(pageable, query -> query
