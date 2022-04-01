@@ -32,10 +32,9 @@ public class MemberController {
         return memberSpringJpaRepository.searchPageSimple(condition, pageable);
     }
 
-    // TODO 스프링 데이터 JPA에서 제공하는 페이징 처리
-    //  데이터 내용과 전체 카운트를 별도로 조회하는 방법
+    // TODO QueryDSLCount 쿼리 최적화
     @GetMapping("/v3/members")
     public Page<MemberTeamDto> searchMemberV3(MemberSearchCondition condition, Pageable pageable) {
-        return memberSpringJpaRepository.searchPageComplex(condition, pageable);
+        return memberSpringJpaRepository.searchPagePerformanceOptimization(condition, pageable);
     }
 }

@@ -231,8 +231,10 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
                 .fetch();
 
         // TODO totalCount
-        JPAQuery<Member> countQuery = queryFactory.select(member)
-                .from(member.team, team)
+        JPAQuery<Member> countQuery = queryFactory
+                .select(member)
+                .from(member)
+                .leftJoin(member.team, team)
                 .where(
                         usernameEq(condition.getUsername()),
                         teamNameEq(condition.getTeamName()),
