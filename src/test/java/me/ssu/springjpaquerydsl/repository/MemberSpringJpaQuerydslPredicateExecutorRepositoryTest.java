@@ -35,9 +35,9 @@ public class MemberSpringJpaQuerydslPredicateExecutorRepositoryTest extends JpaB
         QMember member = QMember.member;
         Iterable<Member> result = memberSpringJpaRepository.findAll(
                 member.age.between(20, 40)
-                        .and(member.username.eq("member11")));
+                        .and(member.username.eq("member1")));
         for (Member findMember : result) {
-            System.out.println("member11" + findMember);
+            System.out.println("member1" + findMember);
         }
     }
 }
