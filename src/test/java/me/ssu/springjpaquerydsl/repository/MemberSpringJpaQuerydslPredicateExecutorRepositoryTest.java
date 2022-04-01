@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 
 public class MemberSpringJpaQuerydslPredicateExecutorRepositoryTest extends JpaBaseTest {
 
+    /**
+     * 스프링 데이터 JPA에서 제공하는 QueryDSL
+     *  QuerydslPredicateExecutor<T>
+     */
     @Test
     void querydslPredicateExecutorTest() {
         // TODO Team 객체 생성
