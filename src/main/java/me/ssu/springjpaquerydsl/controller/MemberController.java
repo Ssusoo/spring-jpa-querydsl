@@ -36,6 +36,6 @@ public class MemberController {
     //  데이터 내용과 전체 카운트를 별도로 조회하는 방법
     @GetMapping("/v3/members")
     public Page<MemberTeamDto> searchMemberV3(MemberSearchCondition condition, Pageable pageable) {
-        return memberSpringJpaRepository.searchPagePerformanceOptimization(condition, pageable);
+        return memberSpringJpaRepository.searchPageComplex(condition, pageable);
     }
 }
