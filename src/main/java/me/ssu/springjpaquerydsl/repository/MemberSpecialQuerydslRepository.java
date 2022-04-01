@@ -2,9 +2,11 @@ package me.ssu.springjpaquerydsl.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
 import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
 import me.ssu.springjpaquerydsl.dto.QMemberTeamDto;
+import me.ssu.springjpaquerydsl.entity.QMember;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,7 +23,6 @@ import static org.springframework.util.StringUtils.hasText;
 //  커스텀하게 만드는 게 아니라 조회 전용으로 따로 빼주는 것도 하나의 방법임.
 @Repository
 public class MemberSpecialQuerydslRepository {
-
     // TODO QueryDSL을 사용하기 위해 JPAQueryFactory 필요하다.
     private final JPAQueryFactory queryFactory;
 

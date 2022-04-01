@@ -191,8 +191,8 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
 
     // TODO Count 쿼리 최적화
     @Override
-    public Page<MemberTeamDto> searchPagePerformanceOptimization(MemberSearchCondition condition, Pageable pageable) {
-
+    public Page<MemberTeamDto> searchPagePerformanceOptimization(MemberSearchCondition condition,
+                                                                 Pageable pageable) {
         List<MemberTeamDto> content = queryFactory
                 .select(
                         new QMemberTeamDto (
@@ -239,6 +239,11 @@ public class MemberSpringJpaRepositoryImpl implements MemberSpringJpaRepositoryC
                         ageGoe(condition.getAgeGoe()),
                         ageLoe(condition.getAgeLoe())
                 );
+
+        // TODO 데이터 반환하기
+        //  PageImpl이 스프링 데이터 JPA Page의 구현체임.
+//        return new PageImpl<>(content, pageable, total);
+
 
         // TODO 자바 8에서 fetchCount()를 해야 실제 countQuery가 날라감.
 //        countQuery.fetchCount();
