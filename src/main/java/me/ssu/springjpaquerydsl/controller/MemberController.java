@@ -32,7 +32,7 @@ public class MemberController {
         return memberSpringJpaRepository.searchPageSimple(condition, pageable);
     }
 
-    // TODO QueryDSLCount 쿼리 최적화
+     // TODO QueryDSLCount 쿼리 최적화
     @GetMapping("/v3/members")
     public Page<MemberTeamDto> searchMemberV3(MemberSearchCondition condition, Pageable pageable) {
         return memberSpringJpaRepository.searchPagePerformanceOptimization(condition, pageable);
