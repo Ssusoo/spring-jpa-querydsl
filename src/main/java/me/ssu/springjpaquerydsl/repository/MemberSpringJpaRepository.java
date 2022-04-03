@@ -14,7 +14,7 @@ import java.util.List;
 // TODO 스프링 데이터 리포지토리에 사용자 정의 인터페이스 상속--2
 //  스프링 데이터 JPA + QueryDSL 사용하기
 //  인터페이스는 여러 개를 상속받을 수 있음
-// TODO 스프링 데이터 JPA에서 제공하는 QueryDSL-3(QuerydslPredicateExecutor<T>
+// TODO 스프링 데이터 JPA에서 제공하는 QueryDSL--3(QuerydslPredicateExecutor<T>
 public interface MemberSpringJpaRepository extends JpaRepository<Member, Long>,
         MemberSpringJpaRepositoryCustom, QuerydslPredicateExecutor<Member> {
 
