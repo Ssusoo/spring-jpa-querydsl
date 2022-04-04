@@ -165,7 +165,6 @@ public class MemberRealJpaRepository {
         return hasText(teamName) ? team.name.eq(teamName) : null;
     }
 
-
     private BooleanExpression ageGoe(Integer ageGoe) {
         return ageGoe!= null ? member.age.goe(ageGoe) : null;
     }
