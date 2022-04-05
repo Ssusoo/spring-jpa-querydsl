@@ -1,6 +1,5 @@
 package me.ssu.springjpaquerydsl.repository;
 
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static me.ssu.springjpaquerydsl.entity.QMember.*;
+import static me.ssu.springjpaquerydsl.entity.QMember.member;
 import static me.ssu.springjpaquerydsl.entity.QTeam.team;
 import static org.springframework.util.StringUtils.hasText;
 
