@@ -2,11 +2,9 @@ package me.ssu.springjpaquerydsl.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import me.ssu.springjpaquerydsl.dto.MemberSearchCondition;
 import me.ssu.springjpaquerydsl.dto.MemberTeamDto;
 import me.ssu.springjpaquerydsl.dto.QMemberTeamDto;
-import me.ssu.springjpaquerydsl.entity.QMember;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
