@@ -37,7 +37,7 @@ public class Member {
         }
     }
 
-    // TODO
+    // TODO Convenience Method
     private void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);
