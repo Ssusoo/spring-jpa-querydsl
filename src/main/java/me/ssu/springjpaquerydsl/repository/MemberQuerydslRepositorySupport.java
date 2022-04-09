@@ -98,6 +98,7 @@ public class MemberQuerydslRepositorySupport extends Querydsl4RepositorySupport 
         return result;
     }
 
+    // TODO 유저네임 동적 쿼리 활용
     private BooleanExpression usernameEq(String username) {
         return hasText(username) ? member.username.eq(username) : null;
     }

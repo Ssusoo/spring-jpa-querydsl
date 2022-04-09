@@ -61,14 +61,17 @@ public class MemberSpecialQuerydslRepository {
         return hasText(username) ? member.username.eq(username) : null;
     }
 
+    // TODO 팀이름 동적 쿼리
     private BooleanExpression teamNameEq(String teamName) {
         return hasText(teamName) ? team.name.eq(teamName) : null;
     }
 
+    // TODO 나이 동적 쿼리 크거나 같거나
     private BooleanExpression ageGoe(Integer ageGoe) {
         return ageGoe!= null ? member.age.goe(ageGoe) : null;
     }
 
+    // TODO 나이 동적 쿼리 작거나 작거나
     private BooleanExpression ageLoe(Integer ageLoe) {
         return ageLoe != null ? member.age.loe(ageLoe) : null;
     }
