@@ -29,7 +29,7 @@ public class InitMember {
         private EntityManager entityManager;
 
         // TODO 데이터 초기화
-        // TODO @PostContruct와 @Transactional과 같이 처리할 수가 없음
+        //  @PostContruct와 @Transactional과 같이 처리할 수가 없음
         //  따로 분리해서 처리해야 함.
         @Transactional
         public void init() {

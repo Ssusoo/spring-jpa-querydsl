@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter @Setter
 // TODO JPA 기본 생성자가 필수(Protected까지 허용)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// TODO 연관관계는 빼주고 toString
+// TODO 연관관계는 빼주고 toString1\
 @ToString(of = {"id", "username", "age"})
 public class Member {
 
@@ -37,7 +37,7 @@ public class Member {
         }
     }
 
-    // TODO
+    // TODO Convenience Method
     private void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);
